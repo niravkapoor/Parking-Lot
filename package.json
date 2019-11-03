@@ -1,0 +1,29 @@
+{
+  "name": "parking-lot",
+  "version": "1.0.0",
+  "description": "An object oriented project build describing parking lot example",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node ./src/index.ts",
+    "start": "node ./dist/server.js",
+    "prod": "npm run build && npm run start"
+  },
+  "keywords": [
+    "Nirav",
+    "nodejs",
+    "typescript"
+  ],
+  "author": "Nirav Kapoor <niravkapoor27@gmail.com> (https://www.linkedin.com/in/nirav-kapoor-331b445a,  https://www.twitter.com/niravkapoor27 https://www.intellectcode.wordpress.com )",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "~12.12.5",
+    "nodemon": "~1.18.9",
+    "prompt": "~1.0.0"
+  },
+  "devDependencies": {
+    "ts-node": "~8.4.1",
+    "tslint": "~5.12.1",
+    "typescript": "^3.6.4"
+  }
+}
