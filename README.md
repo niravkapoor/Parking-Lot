@@ -1,3 +1,5 @@
+##Environment
+
 Node version : >9
 Steps: https://nodejs.org/en/download/
 npm version: 6.0.0
@@ -27,6 +29,7 @@ After starting the project :
 9. User can move to main menu by typing back.
 
 ##Build
+
 1. npm install : to install the packages
 2. npm run dev : For starting the dev mode.
 3. npm run build: To create the dist directory. Converting the typescript to javacript of ES5 version.
@@ -34,6 +37,7 @@ After starting the project :
 4. npm run prod:
 
 ##Nirav Kapoor
+
 https://www.linkedin.com/in/nirav-kapoor-331b445a
 https://www.twitter.com/niravkapoor27  (Blog)
 https://www.github.com/niravkapoor 
