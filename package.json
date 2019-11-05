@@ -7,7 +7,8 @@
     "build": "tsc",
     "dev": "ts-node ./src/index.ts",
     "start": "node ./dist/server.js",
-    "prod": "npm run build && npm run start"
+    "prod": "npm run build && npm run start",
+    "test": "mocha"
   },
   "keywords": [
     "Nirav",
@@ -16,12 +17,14 @@
   ],
   "author": "Nirav Kapoor <niravkapoor27@gmail.com> (https://www.linkedin.com/in/nirav-kapoor-331b445a,  https://www.twitter.com/niravkapoor27 https://www.intellectcode.wordpress.com )",
   "license": "ISC",
-  "dependencies": {
-    "@types/node": "~12.12.5",
-    "nodemon": "~1.18.9",
-    "prompt": "~1.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "@types/node": "~12.12.5",
+    "chai": "~4.2.0",
+    "concat-stream": "^2.0.0",
+    "cross-spawn": "^7.0.1",
+    "mocha": "~6.2.2",
+    "subprocess": "^0.3.0",
     "ts-node": "~8.4.1",
     "tslint": "~5.12.1",
     "typescript": "^3.6.4"

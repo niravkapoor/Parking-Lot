@@ -224,7 +224,7 @@ class App {
             let [word, licence] = data.split(" ");
             const veh = App.parkingList.vehicleObj[licence];
             if(!veh){
-                console.log(REPLY.notFound);
+                console.log(APP_CONSTANT.COLORS.FgRed ,REPLY.notFound);
                 return;
             }
             const spot = veh.getParkingSpot();
