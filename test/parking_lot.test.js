@@ -22,7 +22,7 @@ describe("Parking Lot User Input",  () => {
         childProcess.updateResult('');
         await executeWithInput(childProcess,['create_parking_lot 2', ENTER]);
         const res = await childProcess.updateCB();
-        expect(res).to.include('Created a Parking Lot with 2 slots');
+        expect(res).to.include('Created a Parking Lot with 2 slots.');
     });
 
     it("can park a car", async () => {

@@ -1,5 +1,4 @@
 import { IPromtQuest, IReply } from '../interface';
-console.log('?????')
 const APP_CONSTANT = {
     FILE_PATH: './functional_spec/fixtures/file_input.txt',
     COLORS: {
@@ -32,6 +31,7 @@ const APP_CONSTANT = {
         Blue: "\x1b[34m",
         BGBrightCyan: "\x1b[34m%s\x1b[0m",
         Magenta: "\x1b[35m",
+        Red: "\x1b[31m",
     }
 }
 
@@ -53,7 +53,7 @@ const KEY_WORD = {
 
 const REPLY: IReply = {
     parkingCreated(i: number): String {
-        return `Created a Parking Lot with ${i} slots.`;
+        return `Created a Parking Lot with ${i} ${i > 1 ? 'slots' : 'slot'}.`;
     },
     extraSlot: 'And added to previously created Parking Lot',
     vehicleAlreadyReg(licence: String): String { 

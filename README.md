@@ -9,7 +9,7 @@ To Start the Project :
 2. For dev mode : npm run dev
 3. For production build : npm run prod. dist directory will be created.
 
-Note : Typescript , is used to created project in order to show the object oriented design of Parking Lot.
+Note : Typescript has been used, to created project in order to show the object oriented design of Parking Lot.
 
 After starting the project :
 
@@ -18,6 +18,7 @@ After starting the project :
     b. Read the input from the shell command.
 2. If user creates the parking lot again it will get merged with previously created lot.
 3. Ticket and payment mode details are saved separately in order to generate the reports.
+4. If user tries to empty the spot which is already empty, will see an error.
 
 
 #Nirav Kapoor

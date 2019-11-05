@@ -1,22 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class Payment {
-    constructor(paymentMode, transactionId, amount, paymentDate) {
+var Payment = /** @class */ (function () {
+    function Payment(paymentMode, transactionId, amount, paymentDate) {
         this.paymentDetails = new PaymentDetails(paymentMode, transactionId, amount, paymentDate);
     }
-}
+    return Payment;
+}());
 exports.default = Payment;
-class PaymentDetails {
-    constructor(paymentMode, transactionId, amount, paymentDate) {
+var PaymentDetails = /** @class */ (function () {
+    function PaymentDetails(paymentMode, transactionId, amount, paymentDate) {
         this.paymentMode = paymentMode;
         this.transactionId = transactionId;
         this.amount = amount;
         this.paymentDate = paymentDate;
     }
-    getDetails() {
+    PaymentDetails.prototype.getDetails = function () {
         return { paymentMode: this.paymentMode, transactionId: this.transactionId, amount: this.amount, paymentDate: this.paymentDate };
-    }
-    getTransactionId() {
+    };
+    PaymentDetails.prototype.getTransactionId = function () {
         return this.transactionId;
-    }
-}
+    };
+    return PaymentDetails;
+}());

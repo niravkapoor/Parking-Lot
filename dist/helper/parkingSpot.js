@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class ParkingSpot {
-    constructor(spot, level, active, vehicleSize) {
+var ParkingSpot = /** @class */ (function () {
+    function ParkingSpot(spot, level, active, vehicleSize) {
         this.vehicle = null;
         this.spotNumber = spot;
         this.level = level;
         this.active = active;
         this.vehicleSize = vehicleSize;
     }
-    toggleSpot(status) {
+    ParkingSpot.prototype.toggleSpot = function (status) {
         try {
             this.active = status;
             return true;
@@ -16,11 +16,11 @@ class ParkingSpot {
         catch (err) {
             return false;
         }
-    }
-    getSpot() {
+    };
+    ParkingSpot.prototype.getSpot = function () {
         return this.spotNumber;
-    }
-    removeVehicle() {
+    };
+    ParkingSpot.prototype.removeVehicle = function () {
         try {
             this.vehicle = null;
             return false;
@@ -28,8 +28,8 @@ class ParkingSpot {
         catch (err) {
             return false;
         }
-    }
-    setVehicle(v) {
+    };
+    ParkingSpot.prototype.setVehicle = function (v) {
         try {
             this.vehicle = v;
             return true;
@@ -37,18 +37,19 @@ class ParkingSpot {
         catch (err) {
             return false;
         }
-    }
-    getVehicleDetails() {
+    };
+    ParkingSpot.prototype.getVehicleDetails = function () {
         return this.vehicle;
-    }
-    status() {
+    };
+    ParkingSpot.prototype.status = function () {
         return this.active;
-    }
-    setTicket(ticket) {
+    };
+    ParkingSpot.prototype.setTicket = function (ticket) {
         this.ticket = ticket;
-    }
-    getTicket() {
+    };
+    ParkingSpot.prototype.getTicket = function () {
         return this.ticket;
-    }
-}
+    };
+    return ParkingSpot;
+}());
 exports.default = ParkingSpot;
