@@ -38,7 +38,7 @@ After starting the project :
 
 ## Nirav Kapoor
 
-https://www.linkedin.com/in/nirav-kapoor-331b445a
-https://www.twitter.com/niravkapoor27  (Blog)
-https://www.github.com/niravkapoor 
-https://www.intellectcode.wordpress.com  (Blog)
+* https://www.linkedin.com/in/nirav-kapoor-331b445a
+* https://www.twitter.com/niravkapoor27  (Blog)
+* https://www.github.com/niravkapoor 
+* https://www.intellectcode.wordpress.com  (Blog)
