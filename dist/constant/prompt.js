@@ -85,13 +85,15 @@ var REPLY = {
     notFound: 'Not Found',
     available: "Available",
     incorrectSlot: "Sorry, incorrect no. of slots are given as an input.",
-    fileNameNotEntered: "Kindly, enter the file name",
+    fileNameNotEntered: "Kindly, enter the file name Or type back",
     fileNotExist: function (file_name) {
-        return "Sorry, file : " + file_name + " at path : " + APP_CONSTANT.FILE_PATH + " doesn't exist";
+        return "Sorry, file : " + file_name + " at path : " + APP_CONSTANT.FILE_PATH + " doesn't exist Or Type back";
     },
     spotNotExist: function (spot) {
         return "Spot " + spot + " doesn't exist";
     },
+    spotNotNumber: "Kindly, enter spot no. as integer",
     thankYou: 'Thank You, for playing with us',
+    cmdNotMatch: "Command doesn't match, type any of the below comands"
 };
 exports.REPLY = REPLY;

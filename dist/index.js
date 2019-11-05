@@ -18,6 +18,7 @@ var vehicle_1 = require("./helper/vehicle");
 var car_1 = require("./helper/car");
 var ticket_1 = __importDefault(require("./helper/ticket"));
 var fs = __importStar(require("fs"));
+var logger_1 = __importDefault(require("./helper/logger"));
 var App = /** @class */ (function () {
     function App() {
     }
@@ -36,7 +37,7 @@ var App = /** @class */ (function () {
             console.log(prompt_1.QUESTIONS.startWith);
         }
         catch (err) {
-            console.log('Error in init', err);
+            logger_1.default.log('init', 'index.ts', err, {});
         }
     };
     App.start = function (data) {
@@ -46,38 +47,52 @@ var App = /** @class */ (function () {
                 inputObj.add(ele);
             }
         });
-        if (App.operationPerformed === config_1.Operations.File) {
+        if (App.operationPerformed === config_1.Operations.File && !inputObj.has(prompt_1.KEY_WORD.BACK)) {
             App.readFileInput(data);
+            return;
         }
         try {
             switch (true) {
                 case data === "1":
-                    App.operationPerformed = config_1.Operations.File;
-                    console.log(prompt_1.QUESTIONS.fileName);
+                    if (App.operationPerformed === config_1.Operations.Input) {
+                        console.log(prompt_1.APP_CONSTANT.COLORS.FgRed, 'Type back, to enter into the file read input');
+                    }
+                    else {
+                        App.operationPerformed = config_1.Operations.File;
+                        console.log(prompt_1.QUESTIONS.fileName);
+                    }
                     break;
                 case data === "2":
-                    if (App.operationPerformed !== config_1.Operations.File)
-                        console.log(prompt_1.QUESTIONS.startWithShell);
+                    // if(App.operationPerformed !== Operations.File)
+                    App.operationPerformed = config_1.Operations.Input;
+                    console.log(prompt_1.QUESTIONS.startWithShell);
                     break;
                 case !!inputObj.has(prompt_1.KEY_WORD.CREATE_PARKING_LOT):
+                    App.operationPerformed = config_1.Operations.Input;
                     App.createParkingLot(data);
                     break;
                 case !!inputObj.has(prompt_1.KEY_WORD.PARK):
+                    App.operationPerformed = config_1.Operations.Input;
                     App.parkVehicle(data);
                     break;
                 case !!inputObj.has(prompt_1.KEY_WORD.REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOUR):
+                    App.operationPerformed = config_1.Operations.Input;
                     App.vehicleByColor(data);
                     break;
                 case !!inputObj.has(prompt_1.KEY_WORD.SLOT_NUMBERS_FOR_CARS_WITH_COLOUR):
+                    App.operationPerformed = config_1.Operations.Input;
                     App.vehicleSlotByColor(data);
                     break;
                 case !!inputObj.has(prompt_1.KEY_WORD.SLOT_NUMBER_FOR_REGISTRATION_NUMBER):
+                    App.operationPerformed = config_1.Operations.Input;
                     App.vehicleByLicence(data);
                     break;
                 case !!inputObj.has(prompt_1.KEY_WORD.LEAVE):
+                    App.operationPerformed = config_1.Operations.Input;
                     App.unparkVehicle(data);
                     break;
                 case !!inputObj.has(prompt_1.KEY_WORD.STATUS):
+                    App.operationPerformed = config_1.Operations.Input;
                     App.getStatus(data);
                     break;
                 case !!inputObj.has(prompt_1.KEY_WORD.EXIT):
@@ -88,11 +103,23 @@ var App = /** @class */ (function () {
                     App.init();
                     break;
                 default:
+                    console.log(prompt_1.APP_CONSTANT.COLORS.FgRed, prompt_1.REPLY.cmdNotMatch);
+                    console.log('App.operationPerformed', App.operationPerformed);
+                    if (App.operationPerformed === config_1.Operations.File) {
+                        console.log(prompt_1.QUESTIONS.fileName);
+                    }
+                    else {
+                        if (App.operationPerformed === config_1.Operations.Input)
+                            console.log(prompt_1.QUESTIONS.startWithShell);
+                        else {
+                            console.log(prompt_1.QUESTIONS.startWith);
+                        }
+                    }
                     break;
             }
         }
         catch (err) {
-            console.log('Error in start', err);
+            logger_1.default.log('start', 'index.ts', err, data);
         }
     };
     App.processFile = function (file_name) {
@@ -115,6 +142,7 @@ var App = /** @class */ (function () {
             });
         }
         catch (err) {
+            logger_1.default.log('processFile', 'index.ts', err, file_name);
         }
     };
     App.readFileInput = function (data) {
@@ -134,7 +162,7 @@ var App = /** @class */ (function () {
             });
         }
         catch (err) {
-            console.log('Error in readFileInput', err);
+            logger_1.default.log('readFileInput', 'index.ts', err, data);
             App.operationPerformed = null;
         }
     };
@@ -160,7 +188,7 @@ var App = /** @class */ (function () {
             //App.start("2");
         }
         catch (err) {
-            console.log('Error in createParkingLot', err);
+            logger_1.default.log('createParkingLot', 'index.ts', err, data);
         }
     };
     App.findNextParkingSpot = function (spot) {
@@ -173,7 +201,7 @@ var App = /** @class */ (function () {
             return spot;
         }
         catch (err) {
-            console.log('Error in findNextParkingSpot', err);
+            logger_1.default.log('findNextParkingSpot', 'index.ts', err, spot);
         }
     };
     App.parkVehicle = function (data) {
@@ -217,7 +245,7 @@ var App = /** @class */ (function () {
             //App.start("2");
         }
         catch (err) {
-            console.log('Error in parkVehicle', err);
+            logger_1.default.log('parkVehicle', 'index.ts', err, data);
         }
     };
     App.vehicleByColor = function (data) {
@@ -234,7 +262,7 @@ var App = /** @class */ (function () {
             //App.start("2");
         }
         catch (err) {
-            console.log('Error in vehicleByColor', err);
+            logger_1.default.log('vehicleByColor', 'index.ts', err, data);
         }
     };
     App.vehicleSlotByColor = function (data) {
@@ -251,7 +279,7 @@ var App = /** @class */ (function () {
             //App.start("2");
         }
         catch (err) {
-            console.log('Error in vehicleSlotByColor', err);
+            logger_1.default.log('vehicleSlotByColor', 'index.ts', err, data);
         }
     };
     App.vehicleByLicence = function (data) {
@@ -272,13 +300,17 @@ var App = /** @class */ (function () {
             //App.start("2");
         }
         catch (err) {
-            console.log('Error in vehicleByLicence', err);
+            logger_1.default.log('vehicleByLicence', 'index.ts', err, data);
         }
     };
     App.unparkVehicle = function (data) {
         try {
             var _a = data.split(" "), word = _a[0], num = _a[1];
             var spot = Number(num);
+            if (isNaN(spot)) {
+                console.log(prompt_1.APP_CONSTANT.COLORS.FgRed, prompt_1.REPLY.spotNotNumber);
+                return;
+            }
             if (!App.parkingList.spotList[spot]) {
                 console.log(prompt_1.APP_CONSTANT.COLORS.FgRed, prompt_1.REPLY.spotNotExist(spot));
                 return;
@@ -298,7 +330,7 @@ var App = /** @class */ (function () {
             }
         }
         catch (err) {
-            console.log('Error in unparkVehicle', err);
+            logger_1.default.log('unparkVehicle', 'index.ts', err, data);
         }
     };
     App.getStatus = function (data) {
@@ -316,7 +348,7 @@ var App = /** @class */ (function () {
             console.log(prompt_1.REPLY.printStatus(list));
         }
         catch (err) {
-            console.log('Error in getStatus', err);
+            logger_1.default.log('getStatus', 'index.ts', err, data);
         }
     };
     App.standard_input = null;

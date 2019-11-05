@@ -49,4 +49,6 @@ export interface IReply {
     fileNotExist(file_name: String): String;
     spotNotExist(spot: Number): String;
     thankYou: String;
+    cmdNotMatch: String;
+    spotNotNumber: String;
 }

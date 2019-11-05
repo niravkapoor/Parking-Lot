@@ -7,6 +7,7 @@ import { VehicleSize } from './helper/vehicle';
 import { Car } from './helper/car';
 import Ticket from './helper/ticket';
 import * as fs from 'fs';
+import Logger from './helper/logger';
 
 class App {
     private static standard_input: any = null;
@@ -29,7 +30,7 @@ class App {
             console.log(QUESTIONS.startWith);              
         }
         catch(err){
-            console.log('Error in init', err)
+            Logger.log('init', 'index.ts', err, {});
         }
     }
 
@@ -40,39 +41,52 @@ class App {
                 inputObj.add(ele);
             }
         })
-        if(App.operationPerformed === Operations.File){
+        if(App.operationPerformed === Operations.File && !inputObj.has(KEY_WORD.BACK)){
             App.readFileInput(data);
+            return;
         }
 
         try{            
             switch(true){
                 case data === "1":
-                    App.operationPerformed = Operations.File;
-                    console.log(QUESTIONS.fileName);
+                    if(App.operationPerformed === Operations.Input){
+                        console.log(APP_CONSTANT.COLORS.FgRed, 'Type back, to enter into the file read input')
+                    }else{
+                        App.operationPerformed = Operations.File;
+                        console.log(QUESTIONS.fileName);
+                    }
                     break;
                 case data === "2":
-                    if(App.operationPerformed !== Operations.File)
-                        console.log(QUESTIONS.startWithShell);
+                    // if(App.operationPerformed !== Operations.File)
+                    App.operationPerformed = Operations.Input;
+                    console.log(QUESTIONS.startWithShell);
                     break;
                 case !!inputObj.has(KEY_WORD.CREATE_PARKING_LOT):
+                    App.operationPerformed = Operations.Input;
                     App.createParkingLot(data);
                     break;
                 case !!inputObj.has(KEY_WORD.PARK):
+                    App.operationPerformed = Operations.Input;
                     App.parkVehicle(data);
                     break;
                 case !!inputObj.has(KEY_WORD.REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOUR):
+                    App.operationPerformed = Operations.Input;
                     App.vehicleByColor(data);
                     break;
                 case !!inputObj.has(KEY_WORD.SLOT_NUMBERS_FOR_CARS_WITH_COLOUR):
+                    App.operationPerformed = Operations.Input;
                     App.vehicleSlotByColor(data);
                     break;
                 case !!inputObj.has(KEY_WORD.SLOT_NUMBER_FOR_REGISTRATION_NUMBER):
+                    App.operationPerformed = Operations.Input;
                     App.vehicleByLicence(data);
                     break;
                 case !!inputObj.has(KEY_WORD.LEAVE):
+                    App.operationPerformed = Operations.Input;
                     App.unparkVehicle(data);
                     break;
                 case !!inputObj.has(KEY_WORD.STATUS):
+                    App.operationPerformed = Operations.Input;
                     App.getStatus(data);
                     break;
                 case !!inputObj.has(KEY_WORD.EXIT):
@@ -83,12 +97,23 @@ class App {
                     App.init();
                     break;
                 default:
+                    console.log(APP_CONSTANT.COLORS.FgRed, REPLY.cmdNotMatch);
+                    console.log('App.operationPerformed', App.operationPerformed)
+                    if(App.operationPerformed === Operations.File){
+                        console.log(QUESTIONS.fileName);
+                    }else{
+                        if(App.operationPerformed === Operations.Input)
+                            console.log(QUESTIONS.startWithShell);
+                        else{
+                            console.log(QUESTIONS.startWith);  
+                        }
+                    }
                     break;
             }
             
         }
         catch(err){
-            console.log('Error in start', err);
+            Logger.log('start', 'index.ts', err, data);
         }
     }
 
@@ -113,7 +138,7 @@ class App {
                 })
             })
         }catch(err){
-
+            Logger.log('processFile', 'index.ts', err, file_name);
         }
     }
 
@@ -132,7 +157,7 @@ class App {
                 }
             });
         }catch(err){
-            console.log('Error in readFileInput', err)
+            Logger.log('readFileInput', 'index.ts', err, data);
             App.operationPerformed = null;
         }
     }
@@ -164,7 +189,7 @@ class App {
             //App.start("2");
         }
         catch(err) {
-            console.log('Error in createParkingLot', err)
+            Logger.log('createParkingLot', 'index.ts', err, data);
         }
     }
 
@@ -177,7 +202,7 @@ class App {
             }
             return spot;
         }catch(err) {
-            console.log('Error in findNextParkingSpot', err)
+            Logger.log('findNextParkingSpot', 'index.ts', err, spot);
         }
     }
 
@@ -219,7 +244,7 @@ class App {
             }
             //App.start("2");
         }catch(err){
-            console.log('Error in parkVehicle', err)
+            Logger.log('parkVehicle', 'index.ts', err, data);
         }
     }
 
@@ -236,7 +261,7 @@ class App {
             console.log(veh.join(","));
             //App.start("2");
         }catch(err) {
-            console.log('Error in vehicleByColor', err)
+            Logger.log('vehicleByColor', 'index.ts', err, data);
         }
     }    
 
@@ -254,7 +279,7 @@ class App {
             //App.start("2");
         }
         catch(err){
-            console.log('Error in vehicleSlotByColor', err)
+            Logger.log('vehicleSlotByColor', 'index.ts', err, data);
         }
     }
 
@@ -276,7 +301,7 @@ class App {
             //App.start("2");
         }
         catch(err){
-            console.log('Error in vehicleByLicence', err)
+            Logger.log('vehicleByLicence', 'index.ts', err, data);
         }
     }
 
@@ -284,6 +309,10 @@ class App {
         try{
             const [word, num] = data.split(" ");
             const spot = Number(num);
+            if(isNaN(spot)){
+                console.log(APP_CONSTANT.COLORS.FgRed,REPLY.spotNotNumber);
+                return;
+            }
             if(!App.parkingList.spotList[spot]){
                 console.log(APP_CONSTANT.COLORS.FgRed,REPLY.spotNotExist(spot));
                 return;
@@ -301,7 +330,7 @@ class App {
                 console.log(REPLY.slotAlreadyEmpty(spot));
             }
         }catch(err){
-            console.log('Error in unparkVehicle', err);
+            Logger.log('unparkVehicle', 'index.ts', err, data)
         }
     }
 
@@ -320,7 +349,7 @@ class App {
             console.log(REPLY.printStatus(list));
         }
         catch(err){
-            console.log('Error in getStatus', err);
+            Logger.log('getStatus', 'index.ts', err, data);
         }
     }
 }

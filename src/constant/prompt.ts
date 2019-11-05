@@ -84,14 +84,16 @@ const REPLY: IReply = {
     notFound: 'Not Found',
     available: "Available",
     incorrectSlot: `Sorry, incorrect no. of slots are given as an input.`,
-    fileNameNotEntered: `Kindly, enter the file name`,
+    fileNameNotEntered: `Kindly, enter the file name Or type back`,
     fileNotExist(file_name: String): String {
-        return `Sorry, file : ${file_name} at path : ${APP_CONSTANT.FILE_PATH} doesn't exist`
+        return `Sorry, file : ${file_name} at path : ${APP_CONSTANT.FILE_PATH} doesn't exist Or Type back`
     },
     spotNotExist(spot: Number): String{
         return `Spot ${spot} doesn't exist`;
     },
+    spotNotNumber: `Kindly, enter spot no. as integer`,
     thankYou: 'Thank You, for playing with us',
+    cmdNotMatch: `Command doesn't match, type any of the below comands`
 }
 
 export {
