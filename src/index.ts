@@ -9,20 +9,24 @@ import Ticket from './helper/ticket';
 import * as fs from 'fs';
 
 class App {
-    private static standard_input: any;
+    private static standard_input: any = null;
     private static parkingList: IParkingList = null;
     private static availableSpot: number;
     private static operationPerformed: Operations = null;
     static init(): void{
         try{
             App.parkingList = { spotList: [undefined], vehicleObj: {}, tickets: {}};
-            App.standard_input = readline.createInterface({
-                input: process.stdin,
-                output: process.stdout,
-                terminal: false
-            });
+            App.operationPerformed = null;
+            if(!App.standard_input){
+                App.standard_input = readline.createInterface({
+                    input: process.stdin,
+                    output: process.stdout,
+                    terminal: false
+                });
+                App.standard_input.on('line', App.start);
+            }
+            
             console.log(QUESTIONS.startWith);              
-            App.standard_input.on('line', App.start);
         }
         catch(err){
             console.log('Error in init', err)
@@ -36,10 +40,15 @@ class App {
                 inputObj.add(ele);
             }
         })
+        if(App.operationPerformed === Operations.File){
+            App.readFileInput(data);
+        }
+
         try{            
             switch(true){
                 case data === "1":
-                    App.readFileInput();
+                    App.operationPerformed = Operations.File;
+                    console.log(QUESTIONS.fileName);
                     break;
                 case data === "2":
                     if(App.operationPerformed !== Operations.File)
@@ -66,9 +75,15 @@ class App {
                 case !!inputObj.has(KEY_WORD.STATUS):
                     App.getStatus(data);
                     break;
+                case !!inputObj.has(KEY_WORD.EXIT):
+                    console.log(APP_CONSTANT.COLORS.BgCyan,REPLY.thankYou);
+                    process.exit();
+                    break;
+                case !!inputObj.has(KEY_WORD.BACK):
+                    App.init();
+                    break;
                 default:
                     break;
-                
             }
             
         }
@@ -77,13 +92,13 @@ class App {
         }
     }
 
-    static readFileInput(): void {
+    static processFile(file_name: String): void {
         try{
             const inputs = [];
-            App.operationPerformed = Operations.File;
-            console.log(`${REPLY.readingFile}`);
+            App.operationPerformed = null;
+            console.log(`${REPLY.readingFile(file_name)}`);
             const readInterface = readline.createInterface({
-                input: fs.createReadStream(`${APP_CONSTANT.FILE_PATH}`),
+                input: fs.createReadStream(`${APP_CONSTANT.FILE_PATH}${file_name}`),
                 output: process.stdout,
                 terminal: false
             });
@@ -97,9 +112,28 @@ class App {
                     App.start(ele);
                 })
             })
+        }catch(err){
 
+        }
+    }
+
+    static readFileInput(data: string): void {
+        try{
+            const [file_name] = data.split(" ");
+            if(!file_name){
+                console.log(APP_CONSTANT.COLORS.FgRed, REPLY.fileNameNotEntered);
+                return;
+            }
+            fs.exists(`${APP_CONSTANT.FILE_PATH}${file_name}`, (exist) => {
+                if(exist){
+                    App.processFile(file_name);
+                }else{
+                    console.log(APP_CONSTANT.COLORS.FgRed, REPLY.fileNotExist(file_name));
+                }
+            });
         }catch(err){
             console.log('Error in readFileInput', err)
+            App.operationPerformed = null;
         }
     }
 
@@ -107,7 +141,12 @@ class App {
         try{
             const isAlreadyCreatd = App.parkingList.spotList.length;
             const [word, numSpotLoc] = data.split(" ");
+           
             let numSpot = Number(numSpotLoc);
+            if(isNaN(numSpot) || numSpot < 1){
+                console.log(APP_CONSTANT.COLORS.FgRed ,REPLY.incorrectSlot);
+                return;
+            }
 
             for(let i = 1; i <= numSpot; i++){
                 App.parkingList.spotList.push(
@@ -122,7 +161,7 @@ class App {
                 App.availableSpot = 1;
                 console.log(APP_CONSTANT.COLORS.FgGreen,REPLY.parkingCreated(numSpot));
             }
-            App.start("2");
+            //App.start("2");
         }
         catch(err) {
             console.log('Error in createParkingLot', err)
@@ -178,7 +217,7 @@ class App {
                     }
                 }
             }
-            App.start("2");
+            //App.start("2");
         }catch(err){
             console.log('Error in parkVehicle', err)
         }
@@ -195,7 +234,7 @@ class App {
                 }
             })
             console.log(veh.join(","));
-            App.start("2");
+            //App.start("2");
         }catch(err) {
             console.log('Error in vehicleByColor', err)
         }
@@ -212,7 +251,7 @@ class App {
                 }
             })
             console.log(veh.join(","));
-            App.start("2");
+            //App.start("2");
         }
         catch(err){
             console.log('Error in vehicleSlotByColor', err)
@@ -234,7 +273,7 @@ class App {
                 console.log(APP_CONSTANT.COLORS.FgRed, REPLY.spotNotAssociated);
             }
             
-            App.start("2");
+            //App.start("2");
         }
         catch(err){
             console.log('Error in vehicleByLicence', err)
@@ -245,6 +284,10 @@ class App {
         try{
             const [word, num] = data.split(" ");
             const spot = Number(num);
+            if(!App.parkingList.spotList[spot]){
+                console.log(APP_CONSTANT.COLORS.FgRed,REPLY.spotNotExist(spot));
+                return;
+            }
             const veh = App.parkingList.spotList[spot].getVehicleDetails();
             if(veh){
                 App.parkingList.spotList[spot].setVehicle(null);

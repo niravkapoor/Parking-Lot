@@ -24,13 +24,16 @@ var App = /** @class */ (function () {
     App.init = function () {
         try {
             App.parkingList = { spotList: [undefined], vehicleObj: {}, tickets: {} };
-            App.standard_input = readline.createInterface({
-                input: process.stdin,
-                output: process.stdout,
-                terminal: false
-            });
+            App.operationPerformed = null;
+            if (!App.standard_input) {
+                App.standard_input = readline.createInterface({
+                    input: process.stdin,
+                    output: process.stdout,
+                    terminal: false
+                });
+                App.standard_input.on('line', App.start);
+            }
             console.log(prompt_1.QUESTIONS.startWith);
-            App.standard_input.on('line', App.start);
         }
         catch (err) {
             console.log('Error in init', err);
@@ -43,10 +46,14 @@ var App = /** @class */ (function () {
                 inputObj.add(ele);
             }
         });
+        if (App.operationPerformed === config_1.Operations.File) {
+            App.readFileInput(data);
+        }
         try {
             switch (true) {
                 case data === "1":
-                    App.readFileInput();
+                    App.operationPerformed = config_1.Operations.File;
+                    console.log(prompt_1.QUESTIONS.fileName);
                     break;
                 case data === "2":
                     if (App.operationPerformed !== config_1.Operations.File)
@@ -73,6 +80,13 @@ var App = /** @class */ (function () {
                 case !!inputObj.has(prompt_1.KEY_WORD.STATUS):
                     App.getStatus(data);
                     break;
+                case !!inputObj.has(prompt_1.KEY_WORD.EXIT):
+                    console.log(prompt_1.APP_CONSTANT.COLORS.BgCyan, prompt_1.REPLY.thankYou);
+                    process.exit();
+                    break;
+                case !!inputObj.has(prompt_1.KEY_WORD.BACK):
+                    App.init();
+                    break;
                 default:
                     break;
             }
@@ -81,13 +95,13 @@ var App = /** @class */ (function () {
             console.log('Error in start', err);
         }
     };
-    App.readFileInput = function () {
+    App.processFile = function (file_name) {
         try {
             var inputs_1 = [];
-            App.operationPerformed = config_1.Operations.File;
-            console.log("" + prompt_1.REPLY.readingFile);
+            App.operationPerformed = null;
+            console.log("" + prompt_1.REPLY.readingFile(file_name));
             var readInterface = readline.createInterface({
-                input: fs.createReadStream("" + prompt_1.APP_CONSTANT.FILE_PATH),
+                input: fs.createReadStream("" + prompt_1.APP_CONSTANT.FILE_PATH + file_name),
                 output: process.stdout,
                 terminal: false
             });
@@ -101,7 +115,27 @@ var App = /** @class */ (function () {
             });
         }
         catch (err) {
+        }
+    };
+    App.readFileInput = function (data) {
+        try {
+            var file_name_1 = data.split(" ")[0];
+            if (!file_name_1) {
+                console.log(prompt_1.APP_CONSTANT.COLORS.FgRed, prompt_1.REPLY.fileNameNotEntered);
+                return;
+            }
+            fs.exists("" + prompt_1.APP_CONSTANT.FILE_PATH + file_name_1, function (exist) {
+                if (exist) {
+                    App.processFile(file_name_1);
+                }
+                else {
+                    console.log(prompt_1.APP_CONSTANT.COLORS.FgRed, prompt_1.REPLY.fileNotExist(file_name_1));
+                }
+            });
+        }
+        catch (err) {
             console.log('Error in readFileInput', err);
+            App.operationPerformed = null;
         }
     };
     App.createParkingLot = function (data) {
@@ -109,6 +143,10 @@ var App = /** @class */ (function () {
             var isAlreadyCreatd = App.parkingList.spotList.length;
             var _a = data.split(" "), word = _a[0], numSpotLoc = _a[1];
             var numSpot = Number(numSpotLoc);
+            if (isNaN(numSpot) || numSpot < 1) {
+                console.log(prompt_1.APP_CONSTANT.COLORS.FgRed, prompt_1.REPLY.incorrectSlot);
+                return;
+            }
             for (var i = 1; i <= numSpot; i++) {
                 App.parkingList.spotList.push(new parkingSpot_1.default(i, config_1.ParkingLevel.One, true, vehicle_1.VehicleSize.Car));
             }
@@ -119,7 +157,7 @@ var App = /** @class */ (function () {
                 App.availableSpot = 1;
                 console.log(prompt_1.APP_CONSTANT.COLORS.FgGreen, prompt_1.REPLY.parkingCreated(numSpot));
             }
-            App.start("2");
+            //App.start("2");
         }
         catch (err) {
             console.log('Error in createParkingLot', err);
@@ -176,7 +214,7 @@ var App = /** @class */ (function () {
                     }
                 }
             }
-            App.start("2");
+            //App.start("2");
         }
         catch (err) {
             console.log('Error in parkVehicle', err);
@@ -193,7 +231,7 @@ var App = /** @class */ (function () {
                 }
             });
             console.log(veh_1.join(","));
-            App.start("2");
+            //App.start("2");
         }
         catch (err) {
             console.log('Error in vehicleByColor', err);
@@ -210,7 +248,7 @@ var App = /** @class */ (function () {
                 }
             });
             console.log(veh_2.join(","));
-            App.start("2");
+            //App.start("2");
         }
         catch (err) {
             console.log('Error in vehicleSlotByColor', err);
@@ -231,7 +269,7 @@ var App = /** @class */ (function () {
             else {
                 console.log(prompt_1.APP_CONSTANT.COLORS.FgRed, prompt_1.REPLY.spotNotAssociated);
             }
-            App.start("2");
+            //App.start("2");
         }
         catch (err) {
             console.log('Error in vehicleByLicence', err);
@@ -241,6 +279,10 @@ var App = /** @class */ (function () {
         try {
             var _a = data.split(" "), word = _a[0], num = _a[1];
             var spot = Number(num);
+            if (!App.parkingList.spotList[spot]) {
+                console.log(prompt_1.APP_CONSTANT.COLORS.FgRed, prompt_1.REPLY.spotNotExist(spot));
+                return;
+            }
             var veh = App.parkingList.spotList[spot].getVehicleDetails();
             if (veh) {
                 App.parkingList.spotList[spot].setVehicle(null);
@@ -277,6 +319,7 @@ var App = /** @class */ (function () {
             console.log('Error in getStatus', err);
         }
     };
+    App.standard_input = null;
     App.parkingList = null;
     App.operationPerformed = null;
     return App;

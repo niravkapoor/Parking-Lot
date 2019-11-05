@@ -1,15 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var APP_CONSTANT = {
-    FILE_PATH: './functional_spec/fixtures/file_input.txt',
+    FILE_PATH: './bin/',
     COLORS: {
-        Reset: "\x1b[0m%s\x1b[0m",
-        Bright: "\x1b[1m%s\x1b[0m",
-        Dim: "\x1b[2m%s\x1b[0m",
-        Underscore: "\x1b[4m%s\x1b[0m",
-        Blink: "\x1b[5m%s\x1b[0m",
-        Reverse: "\x1b[7m%s\x1b[0m",
-        Hidden: "\x1b[8m%s\x1b[0m",
         FgBlack: "\x1b[30m%s\x1b[0m",
         FgRed: "\x1b[31m%s\x1b[0m",
         FgGreen: "\x1b[32m%s\x1b[0m",
@@ -25,7 +18,6 @@ var APP_CONSTANT = {
         BgBlue: "\x1b[44m%s\x1b[0m",
         BgMagenta: "\x1b[45m%s\x1b[0m",
         BgCyan: "\x1b[46m%s\x1b[0m",
-        BgWhite: "\x1b[47m%s\x1b[0m",
         CYAN: "\x1b[36m%s\x1b[0m",
         Green: "\x1b[32m",
         Normal: "\x1b[0m",
@@ -33,12 +25,14 @@ var APP_CONSTANT = {
         BGBrightCyan: "\x1b[34m%s\x1b[0m",
         Magenta: "\x1b[35m",
         Red: "\x1b[31m",
+        Yellow: "\x1b[33m"
     }
 };
 exports.APP_CONSTANT = APP_CONSTANT;
 var QUESTIONS = {
-    startWith: "Welcome Let's start with the test...!!!\nFor input file type : " + APP_CONSTANT.COLORS.Blue + "1" + APP_CONSTANT.COLORS.Normal + "\nFor shell command type: " + APP_CONSTANT.COLORS.Blue + "2" + APP_CONSTANT.COLORS.Normal,
-    startWithShell: "Type any of the following command:\nTo Create a parking lot type: " + APP_CONSTANT.COLORS.Magenta + "create_parking_lot <size of lot>" + APP_CONSTANT.COLORS.Normal + "\nTo Park a vehicle type: " + APP_CONSTANT.COLORS.Magenta + "park <car licence no.> <color of the car>" + APP_CONSTANT.COLORS.Normal + "\nTo leave any spot type: " + APP_CONSTANT.COLORS.Magenta + "leave <spot no>" + APP_CONSTANT.COLORS.Normal + "\nTo check parking status type: " + APP_CONSTANT.COLORS.Magenta + "status" + APP_CONSTANT.COLORS.Normal + "\nTo find the licence no by color of a car type: " + APP_CONSTANT.COLORS.Magenta + "registration_numbers_for_cars_with_colour <color of the car>" + APP_CONSTANT.COLORS.Normal + "\nTo find the slot number by car's color type: " + APP_CONSTANT.COLORS.Magenta + "slot_numbers_for_cars_with_colour <color of a car>" + APP_CONSTANT.COLORS.Normal + "\nTo find the slot number by car's licence number type: " + APP_CONSTANT.COLORS.Magenta + "slot_number_for_registration_number <licence no.>" + APP_CONSTANT.COLORS.Normal + "\nTo exit the game type: " + APP_CONSTANT.COLORS.FgRed + "exit" + APP_CONSTANT.COLORS.Normal
+    startWith: "Welcome, Let's start with the test...!!!\nFor input file type : " + APP_CONSTANT.COLORS.Blue + "1" + APP_CONSTANT.COLORS.Normal + "\nFor shell command type: " + APP_CONSTANT.COLORS.Blue + "2" + APP_CONSTANT.COLORS.Normal,
+    fileName: "Type the File name, file needs to be in (bin/)",
+    startWithShell: "Type any of the following command:\nTo Create a parking lot type: " + APP_CONSTANT.COLORS.Magenta + "create_parking_lot <size of lot>" + APP_CONSTANT.COLORS.Normal + "\nTo Park a vehicle type: " + APP_CONSTANT.COLORS.Magenta + "park <car licence no.> <color of the car>" + APP_CONSTANT.COLORS.Normal + "\nTo leave any spot type: " + APP_CONSTANT.COLORS.Magenta + "leave <spot no>" + APP_CONSTANT.COLORS.Normal + "\nTo check parking status type: " + APP_CONSTANT.COLORS.Magenta + "status" + APP_CONSTANT.COLORS.Normal + "\nTo find the licence no by color of a car type: " + APP_CONSTANT.COLORS.Magenta + "registration_numbers_for_cars_with_colour <color of the car>" + APP_CONSTANT.COLORS.Normal + "\nTo find the slot number by car's color type: " + APP_CONSTANT.COLORS.Magenta + "slot_numbers_for_cars_with_colour <color of a car>" + APP_CONSTANT.COLORS.Normal + "\nTo find the slot number by car's licence number type: " + APP_CONSTANT.COLORS.Magenta + "slot_number_for_registration_number <licence no.>" + APP_CONSTANT.COLORS.Normal + "\nTo exit the game type: " + APP_CONSTANT.COLORS.Red + "exit" + APP_CONSTANT.COLORS.Normal + "\nTo move to the main menu type: " + APP_CONSTANT.COLORS.Red + "back" + APP_CONSTANT.COLORS.Normal
 };
 exports.QUESTIONS = QUESTIONS;
 var KEY_WORD = {
@@ -48,7 +42,9 @@ var KEY_WORD = {
     STATUS: 'status',
     REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOUR: 'registration_numbers_for_cars_with_colour',
     SLOT_NUMBERS_FOR_CARS_WITH_COLOUR: 'slot_numbers_for_cars_with_colour',
-    SLOT_NUMBER_FOR_REGISTRATION_NUMBER: 'slot_number_for_registration_number'
+    SLOT_NUMBER_FOR_REGISTRATION_NUMBER: 'slot_number_for_registration_number',
+    EXIT: 'exit',
+    BACK: 'back'
 };
 exports.KEY_WORD = KEY_WORD;
 var REPLY = {
@@ -83,8 +79,19 @@ var REPLY = {
         });
         return str;
     },
-    readingFile: "Reading the file: file_input.txt, from the path : functional_spec/fixtures/",
+    readingFile: function (file) {
+        return "Reading the file: " + APP_CONSTANT.COLORS.Yellow + file + APP_CONSTANT.COLORS.Normal + ", from the path : " + APP_CONSTANT.COLORS.Yellow + APP_CONSTANT.FILE_PATH + APP_CONSTANT.COLORS.Normal;
+    },
     notFound: 'Not Found',
-    available: "Available"
+    available: "Available",
+    incorrectSlot: "Sorry, incorrect no. of slots are given as an input.",
+    fileNameNotEntered: "Kindly, enter the file name",
+    fileNotExist: function (file_name) {
+        return "Sorry, file : " + file_name + " at path : " + APP_CONSTANT.FILE_PATH + " doesn't exist";
+    },
+    spotNotExist: function (spot) {
+        return "Spot " + spot + " doesn't exist";
+    },
+    thankYou: 'Thank You, for playing with us',
 };
 exports.REPLY = REPLY;

@@ -3,9 +3,10 @@
 # Complete bin/setup so that after it is
 # run, bin/parking_lot can be used to launch
 # it.
+npm run start
 
 # This variable contains absolute path of this `parking_lot` script
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+# DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 # Use DIR variable above to pinpoint your jar/executable/main class
 # e.g.

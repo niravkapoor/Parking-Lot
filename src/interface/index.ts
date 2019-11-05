@@ -5,6 +5,7 @@ import Ticket from '../helper/ticket';
 
 export interface IPromtQuest {
     startWith: String;
+    fileName: String;
     startWithShell: String;
 }
 
@@ -40,7 +41,12 @@ export interface IReply {
     slotAvailable(slot: number): String;
     slotAlreadyEmpty(slot: number): String;
     printStatus(list: any): String;
-    readingFile: String;
     notFound: String;
     available: String;
+    incorrectSlot: String;
+    readingFile(file: String): String;
+    fileNameNotEntered: String;
+    fileNotExist(file_name: String): String;
+    spotNotExist(spot: Number): String;
+    thankYou: String;
 }

@@ -15,7 +15,7 @@ describe("Parking Lot User Input",  () => {
         childProcess.updateResult('');
         await executeWithInput(childProcess,['2',ENTER]);
         const res = await childProcess.updateCB();
-        expect(res).to.include("Welcome Let's start with the test");       
+        expect(res).to.include("Welcome, Let's start with the test");       
     })
 
     it("can create a parking lot", async () => {
@@ -74,8 +74,62 @@ describe("Parking Lot User Input",  () => {
         expect(res).to.include(`${APP_CONSTANT.COLORS.Blue}Slot No.\t\t\tRegistration No.\t\t\tColour${APP_CONSTANT.COLORS.Normal}\n1\t\t\t\tKA-01-HH-1234\t\t\t\twhite\n2\t\t\t\t${APP_CONSTANT.COLORS.Green}Available\t\t\t\tAvailable${APP_CONSTANT.COLORS.Normal}\n3\t\t\t\t${APP_CONSTANT.COLORS.Green}Available\t\t\t\tAvailable${APP_CONSTANT.COLORS.Normal}\n4\t\t\t\t${APP_CONSTANT.COLORS.Green}Available\t\t\t\tAvailable${APP_CONSTANT.COLORS.Normal}\n\n`);
     });
 
+    if("slot doesn't exist", async () => {
+        childProcess.updateResult('');
+        await executeWithInput(childProcess,['leave 100', ENTER])
+        const res = await childProcess.updateCB();
+        expect(res).to.include(`${APP_CONSTANT.COLORS.Red}Spot 100 doesn't exist`);
+    })
+
     after((done) => {
         childProcess.kill(constants.signals.SIGTERM);
         done();
     })
 });
+
+describe("Parking Lot Shouldn't be created",  () => {
+    let childProcess = null;
+    before((done) => {
+        childProcess = createProcess('./dist/index.js');
+        done();
+    });
+
+    it("should not create parking slot",  async () => {
+        childProcess.updateResult('');
+        await executeWithInput(childProcess,['create_parking_lot 0',ENTER]);
+        const res = await childProcess.updateCB();
+        expect(res).to.include("Sorry, incorrect no. of slots are given as an input");       
+    })
+
+    it("should not create parking slot for NAN",  async () => {
+        childProcess.updateResult('');
+        await executeWithInput(childProcess,['create_parking_lot',ENTER]);
+        const res = await childProcess.updateCB();
+        expect(res).to.include("Sorry, incorrect no. of slots are given as an input");       
+    })
+
+    after((done) => {
+        childProcess.kill(constants.signals.SIGTERM);
+        done();
+    })
+});
+
+describe("exit the game", () => {
+    let childProcess = null;
+    before((done) => {
+        childProcess = createProcess('./dist/index.js');
+        done();
+    });
+
+    it("exit the game", async() => {
+        childProcess.updateResult('');
+        await executeWithInput(childProcess,['exit',ENTER]);
+        const res = await childProcess.updateCB();
+        expect(res).to.include("Thank You, for playing with us");
+    })
+
+    after((done) => {
+        childProcess.kill(constants.signals.SIGTERM);
+        done();
+    })
+})
