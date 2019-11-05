@@ -1,4 +1,4 @@
-##Environment
+## Environment
 
 Node version : >9
 Steps: https://nodejs.org/en/download/
@@ -28,7 +28,7 @@ After starting the project :
 8. User can exit the game, by typing exit.
 9. User can move to main menu by typing back.
 
-##Build
+## Build
 
 1. npm install : to install the packages
 2. npm run dev : For starting the dev mode.
@@ -36,7 +36,7 @@ After starting the project :
 4. npm run test: Running unit test case and checking the test coverage.
 4. npm run prod:
 
-##Nirav Kapoor
+## Nirav Kapoor
 
 https://www.linkedin.com/in/nirav-kapoor-331b445a
 https://www.twitter.com/niravkapoor27  (Blog)
